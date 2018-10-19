@@ -31,4 +31,6 @@ cur = db.cursor()
 cur.execute("SELECT calldate, clid, src, dst from cdr WHERE calldate >=" + "'" + str(daysago) + "'")
 
 for a in cur.fetchall():
-	print (a[0], " ", a[1], " ", a[2], "->", a[3], "<br>")
+	print("Datum: ", a[0], "<br>")
+	print("Anrufer: ", a[1], " ", a[2], "<br>")
+	print("Ziel: ", a[3], "<br>", "<br>")
