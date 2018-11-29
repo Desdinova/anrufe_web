@@ -11,15 +11,31 @@ cgitb.enable()
 
 # Header for Webpage
 print("Content-Type: text/html;charset=utf-8")
-print()		# doesn't work without this
+print()         # doesn't work without this
 
 # Variables
-today = datetime.datetime.now()		# time right now
-dif = datetime.timedelta(days=5)
-daysago = today - dif
+daysBackwards = 5
+today = datetime.datetime.now()         # time right now
+dif = datetime.timedelta(days=daysBackwards)
+daysAgo = today - dif
+
+htmlHeader = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>Anrufe</title>
+<link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+"""
+
+htmlFooter = """
+</body>
+</html>
+"""
 
 # Connection to MySQL
-db = MySQLdb.connect(host="localhost",  # your host 
+db = MySQLdb.connect(host="localhost",  # your host
                      user="root",       # username
                      passwd="",     # password
                      db="asterisk")   # name of the database
@@ -28,9 +44,27 @@ db = MySQLdb.connect(host="localhost",  # your host
 cur = db.cursor()
 
 # Query cdr
-cur.execute("SELECT calldate, clid, src, dst from cdr WHERE calldate >=" + "'" + str(daysago) + "'")
+cur.execute("SELECT calldate, clid, src, dst from cdr WHERE calldate >=" + "'" + str(daysAgo) + "'"  + " ORDER BY calldate DESC")
+
+
+print(htmlHeader)
+
+print("<div id='topbar'>")
+print("<div style='float:left';'postion:fixed';><FORM>")
+print("<INPUT TYPE='button' onClick='history.go(0)' VALUE='Refresh'>")
+print("</FORM></div>")
+print("<h1>Anrufe der letzten " + str(daysBackwards) + " Tage</h1>")
+print("</div>")
+
+#Empty space. Otherwise fixed topbar overwrites calls.
+print("<div style='height:80px;'></div>")
 
 for a in cur.fetchall():
-	print("Datum: ", a[0], "<br>")
-	print("Anrufer: ", a[1], " ", a[2], "<br>")
-	print("Ziel: ", a[3], "<br>", "<br>")
+        print("<div id='call'>")
+        print("<b>Datum: </b>", a[0], "<br>")
+        print("<b>Von: </b>", a[1], " ", a[2], "<br>")
+        print("<b>An: </b>", a[3], "<br>")
+        print("</div>")
+
+print("</div>")
+print(htmlFooter)
