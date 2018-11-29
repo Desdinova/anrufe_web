@@ -50,10 +50,10 @@ cur.execute("SELECT calldate, clid, src, dst from cdr WHERE calldate >=" + "'" +
 print(htmlHeader)
 
 print("<div id='topbar'>")
-print("<div style='float:left';'postion:fixed';><FORM>")
-print("<INPUT TYPE='button' onClick='history.go(0)' VALUE='Refresh'>")
-print("</FORM></div>")
-print("<h1>Anrufe der letzten " + str(daysBackwards) + " Tage</h1>")
+print("<ul>")
+print("<li><h1>Anrufe der letzten " + str(daysBackwards) + " Tage</h1></li>")
+print("<li><a href='http://10.0.0.20/python/get_calls.py' class='button'>Refresh</a></li>")
+print("</ul>")
 print("</div>")
 
 #Empty space. Otherwise fixed topbar overwrites calls.
